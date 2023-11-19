@@ -1,1 +1,237 @@
-<h1>test</h1>
+<div style="display: flex; flex-direction: column;">
+  <div style="display: flex; flex-direction: row; justify-content: space-evenly; width: 100%;">
+    <div style="width: 100%;">
+      <canvas id="circle-1-image" style="width: 100%; image-rendering: pixelated; border:1px solid black;"/>
+	</div>
+    <div style="width: 100%;">
+      <svg id="circle-comparison"><defs><mask id="second-shape"></defs></svg>
+	</div>
+  </div>
+  <div>
+    <div class="slider-container">
+      <input type="range" min="1" max="100" value="50" class="slider" id="size-range">
+	  <input value="50" id="size-text" style="width: 50;"/>
+	  <script>
+	    const sizeSlider = document.getElementById("size-range");
+		const sizeInput = document.getElementById("size-text");
+		sizeSlider.addEventListener("input", (event) => updateSize(event.target.value));
+		sizeInput.addEventListener("input", (event) => updateSize(event.target.value));
+		
+		function updateSize(value) {
+		  sizeSlider.value = value;
+		  sizeInput.value = value;
+		  redraw_circles();
+		}
+	  </script>
+    </div>
+	<div style="margin-bottom: 10px;">
+	  <div>
+	    <input type="radio" name="circle-1-choice" value="default" id="circle-1-default" checked>
+		<label for="circle-1-default">Дефолт</label>
+      </div>
+	  <div style="display: none;">
+	    <input type="radio" name="circle-1-choice" value="monotonous" id="circle-1-monotonous">
+		<label for="circle-1-monotonous">Монотонная</label>
+      </div>
+	  <script>
+	    const radio1 = document.getElementById("circle-1-default");
+		const radio2 = document.getElementById("circle-1-monotonous");
+		radio1.addEventListener("input", (event) => redraw_circles());
+		radio2.addEventListener("input", (event) => redraw_circles());
+	  </script>
+    </div>
+	<div>
+	  <div>
+	    <input type="radio" name="circle-2-choice" value="default" id="circle-2-default">
+		<label for="circle-2-default">Дефолт</label>
+      </div>
+	  <div style="display: none;">
+	    <input type="radio" name="circle-2-choice" value="monotonous" id="circle-2-monotonous">
+		<label for="circle-2-monotonous">Монотонная</label>
+      </div>
+	  <div>
+	    <input type="radio" name="circle-2-choice" value="ideal" id="circle-2-ideal" checked>
+		<label for="circle-2-ideal">Идеальная</label>
+      </div>
+	  <script>
+	    const radio2_1 = document.getElementById("circle-2-default");
+		const radio2_2 = document.getElementById("circle-2-monotonous");
+		const radio2_3 = document.getElementById("circle-2-ideal");
+		radio2_1.addEventListener("input", (event) => redraw_circles());
+		radio2_2.addEventListener("input", (event) => redraw_circles());
+		radio2_3.addEventListener("input", (event) => redraw_circles());
+	  </script>
+    </div>
+  </div>
+</div>
+
+<script>
+  const pixelCircleImage = document.getElementById("circle-1-image");
+  const ctx = pixelCircleImage.getContext("2d");
+  const comparisonSvg = document.getElementById("circle-comparison");
+  const comparisonSvgDefs = comparisonSvg.getElementsByTagName("defs")[0];
+  const comparisonSvgMask = comparisonSvg.getElementById("second-shape");
+  const svgns = "http://www.w3.org/2000/svg";
+  
+  function redraw_circles() {
+	size = sizeSlider.value;
+	mode = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
+	mode_2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
+	grid_1 = getCircle(mode, size);
+	draw_copyable(grid_1);
+	draw_comparison(grid_1, mode_2);
+  }
+  
+  function draw_comparison(grid_1, mode_2) {
+    size = grid_1.length;
+	
+	while (comparisonSvg.lastChild != comparisonSvgDefs)
+	  comparisonSvg.removeChild(comparisonSvg.lastChild);
+	while (comparisonSvgMask.lastChild)
+	  comparisonSvgMask.removeChild(comparisonSvgMask.lastChild);
+	comparisonSvg.setAttribute("viewBox", "0 0 " + size + " " + size); 
+	
+	if (mode_2 == "ideal") {
+	  second_shape = getIdealCircleSvg(size);
+	}
+	else {
+	  grid_2 = getCircle(mode_2, size);
+	  second_shape = getCircleSvg(grid_2);
+	}
+	second_shape.setAttributeNS(null, 'style', 'fill: #ffffff;');
+	comparisonSvgMask.appendChild(second_shape);
+	
+	// red main_shape
+	main_shape = getCircleSvg(grid_1);
+	main_shape.setAttributeNS(null, 'style', 'fill: #ff0000;');
+	comparisonSvg.appendChild(main_shape);
+	// green all mask second_shape
+	main_shape = getRect(size)
+	main_shape.setAttributeNS(null, 'style', 'fill: #00ff00;');
+	main_shape.setAttributeNS(null, 'mask', 'url(#second-shape)');
+	comparisonSvg.appendChild(main_shape);
+	// black main_shape mask second_shape
+	main_shape = getCircleSvg(grid_1);
+	main_shape.setAttributeNS(null, 'style', 'fill: #000000;');
+	main_shape.setAttributeNS(null, 'mask', 'url(#second-shape)');
+	comparisonSvg.appendChild(main_shape);
+  }
+  
+  function draw_copyable(grid) {
+    grid = get_border(grid);
+    size = grid.length;
+	pixelCircleImage.width = size;
+	pixelCircleImage.height = size;
+    const imageData = ctx.createImageData(size, size);
+    const data = imageData.data;
+    for (let i = 0; i < size; i++) {
+	  for (let j = 0; j < size; j++) {
+	    index = 4 * (i * size + j);
+		color = grid[i][j] ? 0x000000ff : 0xffffffff;
+        data[index] = color >> 24 & 0xff;
+        data[index + 1] = color >> 16 & 0xff;
+        data[index + 2] = color >> 8 & 0xff;
+        data[index + 3] = color & 0xff;
+      }
+	}
+    ctx.putImageData(imageData, 0, 0);
+  }
+  
+  function getCircle(mode, size) {
+	if (mode == "default")
+	  return getDefaultCircle(size);
+	else if (mode == "monotonous")
+	  return getDefaultCircle(size);
+  }
+  
+  function getDefaultCircle(size) {
+    const res = [];
+	radius = size * 0.5;
+    for (let i = 0; i < size; i++) {
+	  res[i] = [];
+	  for (let j = 0; j < size; j++) {
+	    y = i - radius + 0.5;
+		x = j - radius + 0.5;
+	    res[i][j] = x * x + y * y <= radius * radius;
+	  }
+	}
+	return res;
+  }
+  
+  function get_border(grid, thicc = false) {
+    var border = [];
+    for (let i = 0; i < grid.length; i++) {
+	  border[i] = [];
+	  for (let j = 0; j < grid[i].length; j++) {
+	    is_horizontal_edge = i - 1 < 0 || !grid[i - 1][j] || i + 1 >= grid.length || !grid[i + 1][j];
+		is_vertical_edge = j - 1 < 0 || !grid[i][j - 1] || j + 1 >= grid[i].length || !grid[i][j + 1];
+		is_diagonal_edge = thicc && (is_horizontal_edge || is_vertical_edge
+		  || !grid[i - 1][j - 1] || !grid[i + 1][j - 1] || !grid[i - 1][j + 1] || !grid[i + 1][j + 1]);
+	    border[i][j] = grid[i][j] && (is_horizontal_edge || is_vertical_edge || is_diagonal_edge);
+	  } 
+	}
+	return border;
+  }
+  
+  function getIdealCircleSvg(size) {
+    // https://stackoverflow.com/a/22895436
+    var circle = document.createElementNS(svgns, 'circle');
+	circle.setAttributeNS(null, 'cx', size * 0.5);
+	circle.setAttributeNS(null, 'cy', size * 0.5);
+	circle.setAttributeNS(null, 'r', size * 0.5);
+	return circle;
+  }
+  
+  function getRect(size) {
+    var rect = document.createElementNS(svgns, 'rect');
+    rect.setAttribute('x', '0');
+    rect.setAttribute('y', '0');
+    rect.setAttribute('height', size);
+    rect.setAttribute('width', size);
+	return rect;
+  }
+  
+  function getCircleSvg(grid) {
+    var polygon = document.createElementNS(svgns, "polygon");
+    var array = getBorderPoints(grid);
+    
+    for (value of array) {
+      var point = comparisonSvg.createSVGPoint();
+      point.x = value[0];
+      point.y = value[1];
+      polygon.points.appendItem(point);
+    }
+	return polygon
+  }
+  
+  function getBorderPoints(grid) {
+    epsilon = 0.1;
+	size = grid.length;
+	if (size == 1)
+	  return [[0, 0], [1, 0], [1, 1], [0, 1]];
+	
+    array = [[size * 0.5, 0]];
+	while (array[array.length - 1][0] < size - epsilon) {
+	  prevPoint = array[array.length - 1];
+	  cellX = Math.floor(prevPoint[0] + epsilon);
+	  cellY = Math.floor(prevPoint[1] + epsilon);
+	  while (cellX + 1 < size && grid[cellX + 1][cellY]) {
+	    cellX++;
+	  }
+	  array.push([cellX + 1, cellY]);
+	  while (cellY + 1 < size && cellX + 1 < size && !grid[cellX + 1][cellY]) {
+	    cellY++;
+	  }
+	  array.push([cellX + 1, cellY]);
+	}
+	
+	length = array.length;
+	for (let k = 0; k < 3; k++) {
+	  for (let i = length * k; i < length * (k + 1); i++)
+	    array[i + length] = [size - array[i][1], array[i][0]];
+	}
+	return array;
+  }
+  
+  updateSize(27);
+</script>
