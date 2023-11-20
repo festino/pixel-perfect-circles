@@ -20,7 +20,7 @@
 		function updateSize(value) {
 		  sizeSlider.value = value;
 		  sizeInput.value = value;
-		  redraw_circles();
+		  redrawCircles();
 		}
 	  </script>
     </div>
@@ -34,10 +34,10 @@
 		<label for="circle-1-monotonous">Монотонная</label>
       </div>
 	  <script>
-	    const radio1 = document.getElementById("circle-1-default");
-		const radio2 = document.getElementById("circle-1-monotonous");
-		radio1.addEventListener("input", (event) => redraw_circles());
-		radio2.addEventListener("input", (event) => redraw_circles());
+	    const radio1_1 = document.getElementById("circle-1-default");
+		const radio1_2 = document.getElementById("circle-1-monotonous");
+		radio1_1.addEventListener("input", (event) => redrawCircles());
+		radio1_2.addEventListener("input", (event) => redrawCircles());
 	  </script>
     </div>
 	<div>
@@ -57,9 +57,9 @@
 	    const radio2_1 = document.getElementById("circle-2-default");
 		const radio2_2 = document.getElementById("circle-2-monotonous");
 		const radio2_3 = document.getElementById("circle-2-ideal");
-		radio2_1.addEventListener("input", (event) => redraw_circles());
-		radio2_2.addEventListener("input", (event) => redraw_circles());
-		radio2_3.addEventListener("input", (event) => redraw_circles());
+		radio2_1.addEventListener("input", (event) => redrawCircles());
+		radio2_2.addEventListener("input", (event) => redrawCircles());
+		radio2_3.addEventListener("input", (event) => redrawCircles());
 	  </script>
     </div>
   </div>
@@ -73,17 +73,17 @@
   const comparisonSvgMask = comparisonSvg.getElementById("second-shape");
   const svgns = "http://www.w3.org/2000/svg";
   
-  function redraw_circles() {
+  function redrawCircles() {
 	size = sizeSlider.value;
 	mode = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
-	mode_2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
-	grid_1 = getCircle(mode, size);
-	draw_copyable(grid_1);
-	draw_comparison(grid_1, mode_2);
+	mode2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
+	grid1 = getCircle(mode, size);
+	drawCopyable(grid1);
+	drawComparison(grid1, mode2);
   }
   
-  function draw_comparison(grid_1, mode_2) {
-    size = grid_1.length;
+  function drawComparison(grid1, mode2) {
+    size = grid1.length;
 	
 	while (comparisonSvg.lastChild != comparisonSvgDefs)
 	  comparisonSvg.removeChild(comparisonSvg.lastChild);
@@ -91,33 +91,33 @@
 	  comparisonSvgMask.removeChild(comparisonSvgMask.lastChild);
 	comparisonSvg.setAttribute("viewBox", "0 0 " + size + " " + size); 
 	
-	if (mode_2 == "ideal") {
-	  second_shape = getIdealCircleSvg(size);
+	if (mode2 == "ideal") {
+	  secondShape = getIdealCircleSvg(size);
 	}
 	else {
-	  grid_2 = getCircle(mode_2, size);
-	  second_shape = getCircleSvg(grid_2);
+	  grid2 = getCircle(mode2, size);
+	  secondShape = getCircleSvg(grid2);
 	}
-	second_shape.setAttributeNS(null, 'style', 'fill: #ffffff;');
-	comparisonSvgMask.appendChild(second_shape);
+	secondShape.setAttributeNS(null, 'style', 'fill: #ffffff;');
+	comparisonSvgMask.appendChild(secondShape);
 	
-	// red main_shape
-	main_shape = getCircleSvg(grid_1);
-	main_shape.setAttributeNS(null, 'style', 'fill: #ff0000;');
-	comparisonSvg.appendChild(main_shape);
-	// green all mask second_shape
-	main_shape = getRectSvg(size)
-	main_shape.setAttributeNS(null, 'style', 'fill: #00ff00;');
-	main_shape.setAttributeNS(null, 'mask', 'url(#second-shape)');
-	comparisonSvg.appendChild(main_shape);
-	// black main_shape mask second_shape
-	main_shape = getCircleSvg(grid_1);
-	main_shape.setAttributeNS(null, 'style', 'fill: #000000;');
-	main_shape.setAttributeNS(null, 'mask', 'url(#second-shape)');
-	comparisonSvg.appendChild(main_shape);
+	// red mainShape
+	mainShape = getCircleSvg(grid1);
+	mainShape.setAttributeNS(null, 'style', 'fill: #ff0000;');
+	comparisonSvg.appendChild(mainShape);
+	// green all mask secondShape
+	mainShape = getRectSvg(size)
+	mainShape.setAttributeNS(null, 'style', 'fill: #00ff00;');
+	mainShape.setAttributeNS(null, 'mask', 'url(#second-shape)');
+	comparisonSvg.appendChild(mainShape);
+	// black mainShape mask secondShape
+	mainShape = getCircleSvg(grid1);
+	mainShape.setAttributeNS(null, 'style', 'fill: #000000;');
+	mainShape.setAttributeNS(null, 'mask', 'url(#second-shape)');
+	comparisonSvg.appendChild(mainShape);
   }
   
-  function draw_copyable(grid) {
+  function drawCopyable(grid) {
     grid = getBorderGrid(grid);
     size = grid.length;
 	pixelCircleImage.width = size;
@@ -163,18 +163,17 @@
     for (let i = 0; i < grid.length; i++) {
 	  border[i] = [];
 	  for (let j = 0; j < grid[i].length; j++) {
-	    is_horizontal_edge = i - 1 < 0 || !grid[i - 1][j] || i + 1 >= grid.length || !grid[i + 1][j];
-		is_vertical_edge = j - 1 < 0 || !grid[i][j - 1] || j + 1 >= grid[i].length || !grid[i][j + 1];
-		is_diagonal_edge = thicc && (is_horizontal_edge || is_vertical_edge
+	    isHorizontalEdge = i - 1 < 0 || !grid[i - 1][j] || i + 1 >= grid.length || !grid[i + 1][j];
+		isVerticalEdge = j - 1 < 0 || !grid[i][j - 1] || j + 1 >= grid[i].length || !grid[i][j + 1];
+		isDiagonalEdge = thicc && (isHorizontalEdge || isVerticalEdge
 		  || !grid[i - 1][j - 1] || !grid[i + 1][j - 1] || !grid[i - 1][j + 1] || !grid[i + 1][j + 1]);
-	    border[i][j] = grid[i][j] && (is_horizontal_edge || is_vertical_edge || is_diagonal_edge);
+	    border[i][j] = grid[i][j] && (isHorizontalEdge || isVerticalEdge || isDiagonalEdge);
 	  } 
 	}
 	return border;
   }
   
   function getIdealCircleSvg(size) {
-    // https://stackoverflow.com/a/22895436
     var circle = document.createElementNS(svgns, 'circle');
 	circle.setAttributeNS(null, 'cx', size * 0.5);
 	circle.setAttributeNS(null, 'cy', size * 0.5);
