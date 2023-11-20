@@ -118,7 +118,7 @@
   }
   
   function draw_copyable(grid) {
-    grid = get_border(grid);
+    grid = getBorderGrid(grid);
     size = grid.length;
 	pixelCircleImage.width = size;
 	pixelCircleImage.height = size;
@@ -158,7 +158,7 @@
 	return res;
   }
   
-  function get_border(grid, thicc = false) {
+  function getBorderGrid(grid, thicc = false) {
     var border = [];
     for (let i = 0; i < grid.length; i++) {
 	  border[i] = [];
