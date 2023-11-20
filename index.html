@@ -106,7 +106,7 @@
 	main_shape.setAttributeNS(null, 'style', 'fill: #ff0000;');
 	comparisonSvg.appendChild(main_shape);
 	// green all mask second_shape
-	main_shape = getRect(size)
+	main_shape = getRectSvg(size)
 	main_shape.setAttributeNS(null, 'style', 'fill: #00ff00;');
 	main_shape.setAttributeNS(null, 'mask', 'url(#second-shape)');
 	comparisonSvg.appendChild(main_shape);
@@ -182,7 +182,7 @@
 	return circle;
   }
   
-  function getRect(size) {
+  function getRectSvg(size) {
     var rect = document.createElementNS(svgns, 'rect');
     rect.setAttribute('x', '0');
     rect.setAttribute('y', '0');
