@@ -2,7 +2,7 @@ function getCircle(mode, size) {
     if (mode == "default")
         return getDefaultCircle(size);
     else if (mode == "monotonous")
-        return getDefaultCircle(size);
+        return getNearestAreaCircle(size, true);
 }
 
 function getDefaultCircle(size) {
@@ -22,5 +22,5 @@ function getDefaultCircle(size) {
 function getNearestAreaCircle(size, monotonous) {
     lengthOptions = getLengthOptions(size, monotonous);
     minLengths = getOptimalLengths(size, lengthOptions);
-    return getCircleFromLengths(size, minLengths);
+    return getCircleByLengths(size, minLengths);
 }
