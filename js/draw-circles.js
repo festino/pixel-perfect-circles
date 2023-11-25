@@ -12,7 +12,7 @@ const comparisonSvgMask = comparisonSvg.getElementById("second-shape");
 const svgns = "http://www.w3.org/2000/svg";
 
 function redrawCircles() {
-	size = sizeSlider.value;
+	size = parseInt(sizeSlider.value);
 	mode = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
 	mode2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
 	grid1 = getCircle(mode, size);
