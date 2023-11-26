@@ -1,0 +1,24 @@
+<h1 id="test-status">Testing...</h1>
+<h2 id="test-info"></h2>
+
+<script type="text/javascript" src="../../js/circle-utils.js"></script>
+<script type="text/javascript" src="../../js/length-utils.js"></script>
+<script type="text/javascript" src="../../js/circles.js"></script>
+<script type="text/javascript" src="test_all.js"></script>
+<script>
+    const testCases = [
+        { name: "getDefaultLengths", function: test_getDefaultLengths },
+    ];
+
+    for (let i = 0; i < testCases.length; i++) {
+        const testCase = testCases[i];
+        if (testCase.function())
+            testStatus = true;
+        else
+            testStatus = false;
+
+        document.getElementById("test-info").textContent += testCase.name + ": " + (testStatus ? "PASSED" : "FAILED") + "\n";
+    }
+
+    document.getElementById("test-status").textContent = testStatus ? "Tests: PASSED" : "Tests: FAILED (View the console)";
+</script>
