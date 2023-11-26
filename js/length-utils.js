@@ -66,6 +66,29 @@ function getGridLine(size, sumLength) {
 	return line;
 }
 
+function getDefaultLengths(size) {
+	if (size <= 2)
+		return [1];
+
+	let radius = size / 2;
+	let i = 0;
+	let j = Math.floor(size / 2 - 1);
+	let res = [];
+	while (true) {
+		let y = i - radius + 0.5;
+		let maxX = Math.sqrt(radius * radius - y * y);
+		let max_j = Math.floor(maxX + radius - 0.5);
+		// console.log(size, i, j, max_j, maxX, y);
+		if (y >= 0.0 || size - max_j <= i)
+			break;
+
+		res.push(max_j - j);
+		j = max_j;
+		i += 1;
+	}
+	return res;
+}
+
 function getLengthOptions(size, monotonous) {
 	let arcSize = Math.floor((size + 1) / 2);
 	let options = _getLengthOptions(arcSize);
@@ -104,7 +127,7 @@ function _getLengthOptions(remainingLength) {
 }
 
 function isPossibleLengths(arcSize, lengths) {
-	actualSize = getActualSize(arcSize, lengths);
+	let actualSize = getActualSize(arcSize, lengths);
 	return actualSize == arcSize;
 }
 
