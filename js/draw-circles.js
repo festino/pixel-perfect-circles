@@ -12,16 +12,16 @@ const comparisonSvgMask = comparisonSvg.getElementById("second-shape");
 const svgns = "http://www.w3.org/2000/svg";
 
 function redrawCircles() {
-	size = parseInt(sizeSlider.value);
-	mode = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
-	mode2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
-	grid1 = getCircle(mode, size);
+	let size = parseInt(sizeSlider.value);
+	let mode = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
+	let mode2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
+	let grid1 = getCircle(mode, size);
 	drawCopyable(grid1);
 	drawComparison(grid1, mode2);
 }
 
 function drawComparison(grid1, mode2) {
-	size = grid1.length;
+	let size = grid1.length;
 
 	while (comparisonSvg.lastChild != comparisonSvgDefs)
 		comparisonSvg.removeChild(comparisonSvg.lastChild);
@@ -29,18 +29,19 @@ function drawComparison(grid1, mode2) {
 		comparisonSvgMask.removeChild(comparisonSvgMask.lastChild);
 	comparisonSvg.setAttribute("viewBox", "0 0 " + size + " " + size);
 
+	let secondShape;
 	if (mode2 == "ideal") {
 		secondShape = getIdealCircleSvg(size);
 	}
 	else {
-		grid2 = getCircle(mode2, size);
+		let grid2 = getCircle(mode2, size);
 		secondShape = getCircleSvg(grid2);
 	}
 	secondShape.setAttributeNS(null, 'style', 'fill: #ffffff;');
 	comparisonSvgMask.appendChild(secondShape);
 
 	// red mainShape
-	mainShape = getCircleSvg(grid1);
+	let mainShape = getCircleSvg(grid1);
 	mainShape.setAttributeNS(null, 'style', 'fill: #ff0000;');
 	comparisonSvg.appendChild(mainShape);
 	// green all mask secondShape
@@ -57,15 +58,15 @@ function drawComparison(grid1, mode2) {
 
 function drawCopyable(grid) {
 	grid = getBorderGrid(grid);
-	size = grid.length;
+	let size = grid.length;
 	pixelCircleImage.width = size;
 	pixelCircleImage.height = size;
 	const imageData = ctx.createImageData(size, size);
 	const data = imageData.data;
 	for (let i = 0; i < size; i++) {
 		for (let j = 0; j < size; j++) {
-			index = 4 * (i * size + j);
-			color = grid[i][j] ? 0x000000ff : 0xffffffff;
+			let index = 4 * (i * size + j);
+			let color = grid[i][j] ? 0x000000ff : 0xffffffff;
 			data[index] = color >> 24 & 0xff;
 			data[index + 1] = color >> 16 & 0xff;
 			data[index + 2] = color >> 8 & 0xff;
@@ -76,7 +77,7 @@ function drawCopyable(grid) {
 }
 
 function getIdealCircleSvg(size) {
-	var circle = document.createElementNS(svgns, 'circle');
+	let circle = document.createElementNS(svgns, 'circle');
 	circle.setAttributeNS(null, 'cx', size * 0.5);
 	circle.setAttributeNS(null, 'cy', size * 0.5);
 	circle.setAttributeNS(null, 'r', size * 0.5);
@@ -84,7 +85,7 @@ function getIdealCircleSvg(size) {
 }
 
 function getRectSvg(size) {
-	var rect = document.createElementNS(svgns, 'rect');
+	let rect = document.createElementNS(svgns, 'rect');
 	rect.setAttribute('x', '0');
 	rect.setAttribute('y', '0');
 	rect.setAttribute('height', size);
@@ -93,11 +94,11 @@ function getRectSvg(size) {
 }
 
 function getCircleSvg(grid) {
-	var polygon = document.createElementNS(svgns, "polygon");
-	var array = getBorderPoints(grid);
+	let polygon = document.createElementNS(svgns, "polygon");
+	let array = getBorderPoints(grid);
 
 	for (value of array) {
-		var point = comparisonSvg.createSVGPoint();
+		let point = comparisonSvg.createSVGPoint();
 		point.x = value[0];
 		point.y = value[1];
 		polygon.points.appendItem(point);

@@ -7,12 +7,12 @@ function getCircle(mode, size) {
 
 function getDefaultCircle(size) {
     const res = [];
-    radius = size * 0.5;
+    let radius = size * 0.5;
     for (let i = 0; i < size; i++) {
         res[i] = [];
         for (let j = 0; j < size; j++) {
-            y = i - radius + 0.5;
-            x = j - radius + 0.5;
+            let y = i - radius + 0.5;
+            let x = j - radius + 0.5;
             res[i][j] = x * x + y * y <= radius * radius;
         }
     }
@@ -20,7 +20,7 @@ function getDefaultCircle(size) {
 }
 
 function getNearestAreaCircle(size, monotonous) {
-    lengthOptions = getLengthOptions(size, monotonous);
-    minLengths = getOptimalLengths(size, lengthOptions);
+    let lengthOptions = getLengthOptions(size, monotonous);
+    let minLengths = getOptimalLengths(size, lengthOptions);
     return getCircleByLengths(size, minLengths);
 }
