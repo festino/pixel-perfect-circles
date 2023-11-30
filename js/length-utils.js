@@ -92,9 +92,12 @@ function getDefaultLengths(size) {
 function getLengthOptions(size, monotonous) {
 	let arcSize = Math.floor((size + 1) / 2);
 	let options = _getLengthOptions(arcSize);
+	if (monotonous)
+		return options;
+
 	let res = [];
 	for (const option of options)
-		if (isPossibleLengths(arcSize, option) && (!monotonous || isMonotonousLengths(option)))
+		if (isMonotonousLengths(option))
 			res.push(option);
 
 	return res;
