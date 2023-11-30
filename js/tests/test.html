@@ -1,5 +1,5 @@
 <h1 id="test-status">Testing...</h1>
-<h2 id="test-info"></h2>
+<h2 id="test-info" style="white-space: pre-line;"></h2>
 
 <script type="text/javascript" src="../../js/circle-utils.js"></script>
 <script type="text/javascript" src="../../js/length-utils.js"></script>
@@ -8,6 +8,8 @@
 <script>
     const testCases = [
         { name: "getDefaultLengths", function: test_getDefaultLengths },
+        { name: "isPossibleLengths", function: test_isPossibleLengths },
+        { name: "isPossibleLengths (monotonous)", function: test_isPossibleLengths_monotonous },
     ];
 
     for (let i = 0; i < testCases.length; i++) {
