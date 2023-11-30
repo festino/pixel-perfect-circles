@@ -92,7 +92,7 @@ function getDefaultLengths(size) {
 function getLengthOptions(size, monotonous) {
 	let arcSize = Math.floor((size + 1) / 2);
 	let options = _getLengthOptions(arcSize);
-	if (monotonous)
+	if (!monotonous)
 		return options;
 
 	let res = [];
@@ -112,7 +112,6 @@ function _getLengthOptions(remainingLength) {
 		return [[1]];
 
 	if (lengthsCache.has(remainingLength)) {
-		//console.log("got " + remainingLength);
 		return lengthsCache.get(remainingLength);
 	}
 
