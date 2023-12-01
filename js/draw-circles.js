@@ -6,6 +6,7 @@
 
 const pixelCircleImage = document.getElementById("circle-1-image");
 const ctx = pixelCircleImage.getContext("2d");
+const pixelGridSvg = document.getElementById("pixel-grid");
 const comparisonSvg = document.getElementById("circle-comparison");
 const comparisonSvgDefs = comparisonSvg.getElementsByTagName("defs")[0];
 const comparisonSvgMask = comparisonSvg.getElementById("second-shape");
@@ -16,8 +17,15 @@ function redrawCircles() {
 	let mode = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
 	let mode2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
 	let grid1 = getCircle(mode, size);
+	drawPixelGrid(size);
 	drawCopyable(grid1);
 	drawComparison(grid1, mode2);
+}
+
+function drawPixelGrid(size) {
+	let viewOffset = -Math.floor((size) / 2) * 10 + 0.05;
+	let viewSize = size * 10 + 0.4;
+	pixelGridSvg.setAttribute("viewBox", viewOffset + " " + (viewOffset - (size % 2 == 1 ? 10 : 0)) + " " + viewSize + " " + viewSize + "");
 }
 
 function drawComparison(grid1, mode2) {
