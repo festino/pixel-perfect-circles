@@ -13,11 +13,11 @@ function getOptimalLengthsSlow(size, lengthOptions) {
 	return minLengths;
 }
 
-function getOptimalLengths(size) {
-	let lengths = [];
-	let initLengths = getDefaultLengths(size).sort((a, b) => b - a);
+function getOptimalLengths(size, startLengths) {
+	let initLengths = startLengths.sort((a, b) => b - a);
 	let initAreaDeviation = getAreaDeviationByLengths(size, initLengths);
 	let minInfo = { minLengths: initLengths, minAreaDeviation: initAreaDeviation };
+	let lengths = [];
 	while (lengths.length !== minInfo.minLengths.length || lengths.some((val, i, arr) => val !== minInfo.minLengths[i])) {
 		lengths = minInfo.minLengths;
 

@@ -66,7 +66,7 @@ function test_getOptimalLengthsSlow() {
 function test_getOptimalLengths_bySlow() {
 	let testStatus = true;
 	for (let size = 1; size <= 60; size++) {
-		let lengths = getOptimalLengths(size);
+		let lengths = getOptimalLengths(size, getDefaultLengths(size));
 		let lengthsOptions = getLengthOptions(size, true);
 		let lengthsExpected = getOptimalLengthsSlow(size, lengthsOptions);
 		if (!arrayEquals(lengths, lengthsExpected)) {
