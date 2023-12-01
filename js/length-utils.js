@@ -1,6 +1,6 @@
 const lengthsCache = new Map();
 
-function getOptimalLengths(size, lengthOptions) {
+function getOptimalLengthsSlow(size, lengthOptions) {
 	let minAreaDeviation = +Infinity;
 	let minLengths = lengthOptions[0];
 	for (const lengths of lengthOptions) {
@@ -9,6 +9,101 @@ function getOptimalLengths(size, lengthOptions) {
 			minAreaDeviation = areaDeviation;
 			minLengths = lengths;
 		}
+	}
+	return minLengths;
+}
+
+function getOptimalLengths(size) {
+	let arcSize = Math.floor((size + 1) / 2);
+	let lengths = [];
+	let minLengths = getDefaultLengths(size).sort((a, b) => b - a);
+	while (lengths.length !== minLengths.length || lengths.some((val, i, arr) => val !== minLengths[i])) {
+		lengths = minLengths;
+		let minAreaDeviation = getAreaDeviationByLengths(size, lengths);
+
+		let addIndices = [];
+		let subtractIndices = [];
+		for (let i = 0; i < lengths.length; i++) {
+			if (i == 0 || lengths[i - 1] > lengths[i]) {
+				addIndices.push(i);
+			}
+			if (i == lengths.length - 1 || lengths[i] > lengths[i + 1]) {
+				subtractIndices.push(i);
+			}
+		}
+
+		for (let i of addIndices) {
+			lengths[i]++;
+			if (isPossibleLengths(arcSize, lengths)) {
+				let areaDeviation = getAreaDeviationByLengths(size, lengths);
+				if (areaDeviation < minAreaDeviation) {
+					minAreaDeviation = areaDeviation;
+					minLengths = [...lengths];
+				}
+			}
+			for (let j of subtractIndices) {
+				if (i >= j)
+					continue;
+
+				lengths[j]--;
+				if (lengths[j] == 0)
+					lengths.pop();
+
+				if (isPossibleLengths(arcSize, lengths)) {
+					let areaDeviation = getAreaDeviationByLengths(size, lengths);
+					if (areaDeviation < minAreaDeviation) {
+						minAreaDeviation = areaDeviation;
+						minLengths = [...lengths];
+					}
+				}
+
+				if (j >= lengths.length)
+					lengths.push(0);
+				lengths[j]++;
+			}
+			lengths[i]--;
+		}
+		for (let i of subtractIndices) {
+			if (lengths[i] == 1)
+				continue;
+
+			lengths[i]--;
+			if (isPossibleLengths(arcSize, lengths)) {
+				let areaDeviation = getAreaDeviationByLengths(size, lengths);
+				if (areaDeviation < minAreaDeviation) {
+					minAreaDeviation = areaDeviation;
+					minLengths = [...lengths];
+				}
+			}
+			else {
+				lengths.push(1);
+				let areaDeviation = getAreaDeviationByLengths(size, lengths);
+				if (areaDeviation < minAreaDeviation) {
+					minAreaDeviation = areaDeviation;
+					minLengths = [...lengths];
+				}
+				lengths.pop();
+			}
+
+			for (let j of addIndices) {
+				if (i >= j)
+					continue;
+
+				lengths[j]++;
+
+				if (isPossibleLengths(arcSize, lengths) && isMonotonousLengths(lengths)) {
+					let areaDeviation = getAreaDeviationByLengths(size, lengths);
+					if (areaDeviation < minAreaDeviation) {
+						minAreaDeviation = areaDeviation;
+						minLengths = [...lengths];
+					}
+				}
+
+				lengths[j]--;
+			}
+			lengths[i]++;
+		}
+		console.log(size + ": " + minLengths + " vs " + lengths);
 	}
 	return minLengths;
 }
