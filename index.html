@@ -1,66 +1,70 @@
 <div style="display: flex; flex-direction: column;">
   <div style="display: flex; flex-direction: row; justify-content: space-evenly; width: 100%;">
     <div style="width: 100%;">
-      <canvas id="circle-1-image" style="width: 100%; image-rendering: pixelated; border:1px solid black;"/>
-	</div>
+      <canvas id="circle-1-image" style="width: 100%; image-rendering: pixelated; border:1px solid black;" />
+    </div>
     <div style="width: 100%;">
-      <svg id="circle-comparison"><defs><mask id="second-shape"></defs></svg>
-	</div>
+      <svg id="circle-comparison">
+        <defs>
+          <mask id="second-shape">
+        </defs>
+      </svg>
+    </div>
   </div>
   <div>
     <div class="slider-container">
       <input type="range" min="1" max="100" value="27" class="slider" id="size-range">
-	  <input value="27" id="size-text" style="width: 50;"/>
-	  <script>
-	    const sizeSlider = document.getElementById("size-range");
-		const sizeInput = document.getElementById("size-text");
-		sizeSlider.addEventListener("input", (event) => updateSize(event.target.value));
-		sizeInput.addEventListener("input", (event) => updateSize(event.target.value));
-		
-		function updateSize(value) {
-		  sizeSlider.value = value;
-		  sizeInput.value = value;
-		  redrawCircles();
-		}
-	  </script>
+      <input value="27" id="size-text" style="width: 50;" />
+      <script>
+        const sizeSlider = document.getElementById("size-range");
+        const sizeInput = document.getElementById("size-text");
+        sizeSlider.addEventListener("input", (event) => updateSize(event.target.value));
+        sizeInput.addEventListener("input", (event) => updateSize(event.target.value));
+
+        function updateSize(value) {
+          sizeSlider.value = value;
+          sizeInput.value = value;
+          redrawCircles();
+        }
+      </script>
     </div>
-	<div style="margin-bottom: 10px;">
-	  <div>
-	    <input type="radio" name="circle-1-choice" value="default" id="circle-1-default">
-		<label for="circle-1-default">Дефолт</label>
+    <div style="margin-bottom: 10px;">
+      <div>
+        <input type="radio" name="circle-1-choice" value="default" id="circle-1-default">
+        <label for="circle-1-default">Дефолт</label>
       </div>
-	  <div>
-	    <input type="radio" name="circle-1-choice" value="monotonous" id="circle-1-monotonous" checked>
-		<label for="circle-1-monotonous">Монотонная</label>
+      <div>
+        <input type="radio" name="circle-1-choice" value="monotonous" id="circle-1-monotonous" checked>
+        <label for="circle-1-monotonous">Монотонная</label>
       </div>
-	  <script>
-	    const radio1_1 = document.getElementById("circle-1-default");
-		const radio1_2 = document.getElementById("circle-1-monotonous");
-		radio1_1.addEventListener("input", (event) => redrawCircles());
-		radio1_2.addEventListener("input", (event) => redrawCircles());
-	  </script>
+      <script>
+        const radio1_1 = document.getElementById("circle-1-default");
+        const radio1_2 = document.getElementById("circle-1-monotonous");
+        radio1_1.addEventListener("input", (event) => redrawCircles());
+        radio1_2.addEventListener("input", (event) => redrawCircles());
+      </script>
     </div>
-	<div>
-	  <div>
-	    <input type="radio" name="circle-2-choice" value="default" id="circle-2-default" checked>
-		<label for="circle-2-default">Дефолт</label>
+    <div>
+      <div>
+        <input type="radio" name="circle-2-choice" value="default" id="circle-2-default" checked>
+        <label for="circle-2-default">Дефолт</label>
       </div>
-	  <div>
-	    <input type="radio" name="circle-2-choice" value="monotonous" id="circle-2-monotonous">
-		<label for="circle-2-monotonous">Монотонная</label>
+      <div>
+        <input type="radio" name="circle-2-choice" value="monotonous" id="circle-2-monotonous">
+        <label for="circle-2-monotonous">Монотонная</label>
       </div>
-	  <div>
-	    <input type="radio" name="circle-2-choice" value="ideal" id="circle-2-ideal">
-		<label for="circle-2-ideal">Идеальная</label>
+      <div>
+        <input type="radio" name="circle-2-choice" value="ideal" id="circle-2-ideal">
+        <label for="circle-2-ideal">Идеальная</label>
       </div>
-	  <script>
-	    const radio2_1 = document.getElementById("circle-2-default");
-		const radio2_2 = document.getElementById("circle-2-monotonous");
-		const radio2_3 = document.getElementById("circle-2-ideal");
-		radio2_1.addEventListener("input", (event) => redrawCircles());
-		radio2_2.addEventListener("input", (event) => redrawCircles());
-		radio2_3.addEventListener("input", (event) => redrawCircles());
-	  </script>
+      <script>
+        const radio2_1 = document.getElementById("circle-2-default");
+        const radio2_2 = document.getElementById("circle-2-monotonous");
+        const radio2_3 = document.getElementById("circle-2-ideal");
+        radio2_1.addEventListener("input", (event) => redrawCircles());
+        radio2_2.addEventListener("input", (event) => redrawCircles());
+        radio2_3.addEventListener("input", (event) => redrawCircles());
+      </script>
     </div>
   </div>
 </div>
