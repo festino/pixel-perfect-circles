@@ -19,8 +19,7 @@ function getDefaultCircle(size) {
     return res;
 }
 
-function getNearestAreaCircle(size, monotonous) {
-    let lengthOptions = getLengthOptions(size, monotonous);
-    let minLengths = getOptimalLengths(size, lengthOptions);
+function getNearestAreaCircle(size) {
+    let minLengths = getOptimalLengths(size);
     return getCircleByLengths(size, minLengths);
 }
