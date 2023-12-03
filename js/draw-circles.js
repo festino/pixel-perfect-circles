@@ -17,9 +17,19 @@ function redrawCircles() {
 	let mode = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
 	let mode2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
 	let grid1 = getCircle(mode, size);
+
 	drawPixelGrid(size);
-	drawCopyable(grid1);
-	drawComparison(grid1, mode2);
+	if (mode2 === "none") {
+		drawCopyable(grid1);
+		pixelCircleImage.style.display = "block";
+		comparisonSvg.style.display = "none";
+	}
+	else {
+		drawComparison(grid1, mode2);
+		comparisonSvg.style.display = "block";
+		pixelCircleImage.style.display = "none";
+
+	}
 }
 
 function drawPixelGrid(size) {
@@ -50,11 +60,11 @@ function drawComparison(grid1, mode2) {
 
 	// red mainShape
 	let mainShape = getCircleSvg(grid1);
-	mainShape.setAttributeNS(null, 'style', 'fill: #ff0000;');
+	mainShape.setAttributeNS(null, 'style', 'fill: #770000;');
 	comparisonSvg.appendChild(mainShape);
 	// green all mask secondShape
 	mainShape = getRectSvg(size)
-	mainShape.setAttributeNS(null, 'style', 'fill: #00ff00;');
+	mainShape.setAttributeNS(null, 'style', 'fill: #ff7777;');
 	mainShape.setAttributeNS(null, 'mask', 'url(#second-shape)');
 	comparisonSvg.appendChild(mainShape);
 	// black mainShape mask secondShape

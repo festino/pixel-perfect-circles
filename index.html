@@ -3,36 +3,37 @@
 </head>
 
 <body>
-  <div style="display: flex; flex-direction: column;">
-    <div style="display: flex; flex-direction: row; justify-content: space-evenly; width: 100%;">
-      <div style="width: 100%; position: relative;">
-        <svg id="pixel-grid" style="position: absolute; pointer-events: none;">
-          <defs>
-            <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
-              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#fff" stroke-width="1" />
-            </pattern>
-            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-              <rect width="100" height="100" fill="url(#smallGrid)" />
-              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#fff" stroke-width="2" />
-            </pattern>
-          </defs>
+  <h1>Pixel Perfect Circles</h1>
 
-          <rect x="-100%" y="-100%" width="200%" height="200%" fill="url(#grid)" />
-        </svg>
-        <canvas id="circle-1-image" style="width: 100%; image-rendering: pixelated;" />
-      </div>
-      <div style="width: 100%;">
-        <svg id="circle-comparison">
-          <defs>
-            <mask id="second-shape">
-          </defs>
-        </svg>
-      </div>
+  <div style="display:inline-block; width: 100%;">
+    <div style="float:left; max-height: 70%; max-width: 70%; position: relative; aspect-ratio: 1;">
+      <svg id="pixel-grid" style="height: 100%; position: absolute; pointer-events: none;">
+        <defs>
+          <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#fff" stroke-width="1" />
+          </pattern>
+          <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+            <rect width="100" height="100" fill="url(#smallGrid)" />
+            <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#fff" stroke-width="2" />
+          </pattern>
+        </defs>
+
+        <rect x="-100%" y="-100%" width="200%" height="200%" fill="url(#grid)" />
+      </svg>
+
+      <canvas id="circle-1-image" style="image-rendering: pixelated; width: 100%; height: 100%;"></canvas>
+      <svg id="circle-comparison" style="display: none; width: 100%; height: 100%;">
+        <defs>
+          <mask id="second-shape">
+        </defs>
+      </svg>
     </div>
-    <div>
+
+    <div style="display: inline-block;">
       <div class="slider-container">
-        <input type="range" min="1" max="100" value="27" class="slider" id="size-range">
+        <label for="size-text">Size</label>
         <input value="27" id="size-text" style="width: 50;" />
+        <input type="range" min="1" max="100" value="27" class="slider" id="size-range">
         <script>
           const sizeSlider = document.getElementById("size-range");
           const sizeInput = document.getElementById("size-text");
@@ -49,11 +50,11 @@
       <div style="margin-bottom: 10px;">
         <div>
           <input type="radio" name="circle-1-choice" value="default" id="circle-1-default">
-          <label for="circle-1-default">Дефолт</label>
+          <label for="circle-1-default">Naive</label>
         </div>
         <div>
           <input type="radio" name="circle-1-choice" value="monotonous" id="circle-1-monotonous" checked>
-          <label for="circle-1-monotonous">Монотонная</label>
+          <label for="circle-1-monotonous">MAD</label>
         </div>
         <script>
           const radio1_1 = document.getElementById("circle-1-default");
@@ -64,21 +65,27 @@
       </div>
       <div>
         <div>
-          <input type="radio" name="circle-2-choice" value="default" id="circle-2-default" checked>
-          <label for="circle-2-default">Дефолт</label>
+          <input type="radio" name="circle-2-choice" value="none" id="circle-2-none" checked>
+          <label for="circle-2-default">No comparison (allows circle copy)</label>
+        </div>
+        <div>
+          <input type="radio" name="circle-2-choice" value="default" id="circle-2-default">
+          <label for="circle-2-default">Naive</label>
         </div>
         <div>
           <input type="radio" name="circle-2-choice" value="monotonous" id="circle-2-monotonous">
-          <label for="circle-2-monotonous">Монотонная</label>
+          <label for="circle-2-monotonous">MAD</label>
         </div>
         <div>
           <input type="radio" name="circle-2-choice" value="ideal" id="circle-2-ideal">
-          <label for="circle-2-ideal">Идеальная</label>
+          <label for="circle-2-ideal">Ideal</label>
         </div>
         <script>
+          const radio2_0 = document.getElementById("circle-2-none");
           const radio2_1 = document.getElementById("circle-2-default");
           const radio2_2 = document.getElementById("circle-2-monotonous");
           const radio2_3 = document.getElementById("circle-2-ideal");
+          radio2_0.addEventListener("input", (event) => redrawCircles());
           radio2_1.addEventListener("input", (event) => redrawCircles());
           radio2_2.addEventListener("input", (event) => redrawCircles());
           radio2_3.addEventListener("input", (event) => redrawCircles());
@@ -86,6 +93,15 @@
       </div>
     </div>
   </div>
+
+  <h2>What is the problem</h2>
+  <p>...x² + y² ≤ R²...jaggies (mb wikipedia link)...</p>
+  <p>...monotonous solutions...</p>
+  <h2>Implemented solutions</h2>
+  <h3>Min Area Deviation (MAD)</h3>
+  <p>...excess area + missing area...check size 27 (link)...</p>
+  <p>...pros...mb approx using sort on default lengths...</p>
+  <p>...cons...not that pleasing when size is large...</p>
 
   <script type="text/javascript" src="js/circle-utils.js"></script>
   <script type="text/javascript" src="js/length-utils.js"></script>
