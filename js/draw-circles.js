@@ -13,6 +13,7 @@ const comparisonSvgMask = comparisonSvg.getElementById("second-shape");
 const svgns = "http://www.w3.org/2000/svg";
 
 function redrawCircles() {
+	updateQueryParams();
 	let size = parseInt(sizeSlider.value);
 	let mode = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
 	let mode2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
@@ -28,7 +29,6 @@ function redrawCircles() {
 		drawComparison(grid1, mode2);
 		comparisonSvg.style.display = "block";
 		pixelCircleImage.style.display = "none";
-
 	}
 }
 
@@ -123,5 +123,3 @@ function getCircleSvg(grid) {
 	}
 	return polygon;
 }
-
-updateSize(sizeSlider.value);

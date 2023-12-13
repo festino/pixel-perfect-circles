@@ -37,18 +37,6 @@
           <label for="size-text">Size</label>
           <input value="27" id="size-text" style="width: 50;" />
           <input type="range" min="1" max="100" value="27" class="slider" id="size-range">
-          <script>
-            const sizeSlider = document.getElementById("size-range");
-            const sizeInput = document.getElementById("size-text");
-            sizeSlider.addEventListener("input", (event) => updateSize(event.target.value));
-            sizeInput.addEventListener("input", (event) => updateSize(event.target.value));
-
-            function updateSize(value) {
-              sizeSlider.value = value;
-              sizeInput.value = value;
-              redrawCircles();
-            }
-          </script>
         </div>
         <div style="margin-bottom: 10px;">
           <div>
@@ -59,12 +47,6 @@
             <input type="radio" name="circle-1-choice" value="monotonous" id="circle-1-monotonous" checked>
             <label for="circle-1-monotonous">MAD</label>
           </div>
-          <script>
-            const radio1_1 = document.getElementById("circle-1-default");
-            const radio1_2 = document.getElementById("circle-1-monotonous");
-            radio1_1.addEventListener("input", (event) => redrawCircles());
-            radio1_2.addEventListener("input", (event) => redrawCircles());
-          </script>
         </div>
         <div>
           <div>
@@ -83,16 +65,6 @@
             <input type="radio" name="circle-2-choice" value="ideal" id="circle-2-ideal">
             <label for="circle-2-ideal">Ideal</label>
           </div>
-          <script>
-            const radio2_0 = document.getElementById("circle-2-none");
-            const radio2_1 = document.getElementById("circle-2-default");
-            const radio2_2 = document.getElementById("circle-2-monotonous");
-            const radio2_3 = document.getElementById("circle-2-ideal");
-            radio2_0.addEventListener("input", (event) => redrawCircles());
-            radio2_1.addEventListener("input", (event) => redrawCircles());
-            radio2_2.addEventListener("input", (event) => redrawCircles());
-            radio2_3.addEventListener("input", (event) => redrawCircles());
-          </script>
         </div>
       </div>
     </div>
@@ -113,4 +85,65 @@
   <script type="text/javascript" src="js/length-utils.js"></script>
   <script type="text/javascript" src="js/circles.js"></script>
   <script type="text/javascript" src="js/draw-circles.js"></script>
+  <script>
+    const sizeSlider = document.getElementById("size-range");
+    const sizeInput = document.getElementById("size-text");
+    sizeSlider.addEventListener("input", (event) => updateSize(event.target.value));
+    sizeInput.addEventListener("input", (event) => updateSize(event.target.value));
+    const radio1_1 = document.getElementById("circle-1-default");
+    const radio1_2 = document.getElementById("circle-1-monotonous");
+    radio1_1.addEventListener("input", (event) => redrawCircles());
+    radio1_2.addEventListener("input", (event) => redrawCircles());
+    const radio2_0 = document.getElementById("circle-2-none");
+    const radio2_1 = document.getElementById("circle-2-default");
+    const radio2_2 = document.getElementById("circle-2-monotonous");
+    const radio2_3 = document.getElementById("circle-2-ideal");
+    radio2_0.addEventListener("input", (event) => redrawCircles());
+    radio2_1.addEventListener("input", (event) => redrawCircles());
+    radio2_2.addEventListener("input", (event) => redrawCircles());
+    radio2_3.addEventListener("input", (event) => redrawCircles());
+
+    function insertUrlParam(key, value, pushHistory = false) {
+      if (!history.pushState)
+        return;
+
+      let searchParams = new URLSearchParams(window.location.search);
+      if (value)
+        searchParams.set(key, value);
+      else
+        searchParams.delete(key);
+
+      const paramStr = searchParams.toString();
+      let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + (paramStr ? '?' + paramStr : '');
+      if (pushHistory)
+        window.history.pushState({ path: newurl }, '', newurl);
+      else
+        window.history.replaceState({ path: newurl }, '', newurl);
+    }
+    function updateQueryParams() {
+      let checked_1 = document.querySelector('input[name="circle-1-choice"]:checked')?.value;
+      let checked_2 = document.querySelector('input[name="circle-2-choice"]:checked')?.value;
+      insertUrlParam('size', sizeSlider.value);
+      insertUrlParam('main', checked_1);
+      insertUrlParam('secondary', checked_2);
+    }
+    function initFromQueryParams() {
+      let searchParams = new URLSearchParams(window.location.search);
+      const size = searchParams.get('size');
+      const radio_1 = document.querySelector('input[name="circle-1-choice"][value="' + searchParams.get('main') + '"]');
+      const radio_2 = document.querySelector('input[name="circle-2-choice"][value="' + searchParams.get('secondary') + '"]');
+      if (size) sizeSlider.value = size;
+      if (radio_1) radio_1.checked = true;
+      if (radio_2) radio_2.checked = true;
+    }
+
+    function updateSize(value) {
+      sizeSlider.value = value;
+      sizeInput.value = value;
+      redrawCircles();
+    }
+
+    initFromQueryParams();
+    updateSize(sizeSlider.value);
+  </script>
 </body>
